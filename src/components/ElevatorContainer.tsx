@@ -23,7 +23,7 @@ const ElevatorContainer = (props: Props) => {
       console.log(open);
     }, 2000);
   }, [open]);
-  const elevators = [...Array(10)].map((el, idx) => <Elevator key={idx} open={open} />);
+  const elevators = [...Array(10)].map(() => <Elevator open={open} />);
   return <ElevatorsContainer>{elevators}</ElevatorsContainer>;
 };
 
