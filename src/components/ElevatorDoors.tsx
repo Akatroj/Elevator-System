@@ -1,35 +1,35 @@
 import styled, { css } from 'styled-components';
+import { Size } from './utils';
 
-export type Size = {
-  width: string;
-  height: string;
-};
-
-type DoorProps = Size;
+type DoorProps = { size: Size };
 
 type ElevatorDoorsProps = {
-  size: DoorProps;
+  size: Size;
   open: boolean;
 };
 
 const Door = styled.div<DoorProps>`
-  ${({ width, height }) => css`
-    width: ${width};
-    height: ${height};
+  ${({ size: { width, height } }) => css`
+    width: ${width}px;
+    height: ${height}px;
+    &.left {
+      left: ${width}px;
+    }
+    &.right {
+      right: ${width}px;
+    }
   `};
   position: absolute;
   background-color: silver;
   transition: transform 1s;
   &.left {
     border-right: 1px solid black;
-    left: ${({ width }) => width};
     &.open {
       transform: translate(-100%, 0);
     }
   }
   &.right {
     border-left: 1px solid black;
-    right: ${({ width }) => width};
     &.open {
       transform: translate(100%, 0);
     }
@@ -39,13 +39,13 @@ const Door = styled.div<DoorProps>`
   }
 `;
 
-const ElevatorDoors = ({ open, size: { width, height } }: ElevatorDoorsProps) => {
+const ElevatorDoors = ({ open, size }: ElevatorDoorsProps) => {
   const openClass = open ? 'open' : 'closed';
 
   return (
     <>
-      <Door className={`left ${openClass}`} width={width} height={height} />
-      <Door className={`right ${openClass}`} width={width} height={height} />
+      <Door className={`left ${openClass}`} size={size} />
+      <Door className={`right ${openClass}`} size={size} />
     </>
   );
 };

@@ -1,31 +1,49 @@
 import React from 'react';
-import styled from 'styled-components';
-import ElevatorDoors, { Size } from './ElevatorDoors';
+import styled, { css } from 'styled-components';
+import ElevatorButtons from './ElevatorButtons';
+import ElevatorDoors from './ElevatorDoors';
+import { Size } from './utils';
+
+type OuterContainerProps = { size: Size };
 
 type ElevatorProps = {
   open: boolean;
-};
+  size: Size;
+} & OuterContainerProps;
 
 const elevatorDoorSize: Size = {
   // TODO: fix
-  width: '50px',
-  height: '150px',
+  width: 50,
+  height: 150,
 };
 
-const ElevatorWrapper = styled.div`
+const OuterContainer = styled.div<OuterContainerProps>`
+  ${({ size: { width, height } }) => css`
+    width: ${width}px;
+    height: ${height}px;
+  `}
   position: relative;
-  width: 200px;
-  height: 200px;
   background-color: ease-in;
   border: 1px solid red;
   margin: 20px;
+  /* temp */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
-const Elevator = ({ open }: ElevatorProps) => {
+const Elevator = ({ open, size }: ElevatorProps) => {
   return (
-    <ElevatorWrapper>
+    <OuterContainer size={size}>
       <ElevatorDoors open={open} size={elevatorDoorSize} />
-    </ElevatorWrapper>
+      <ElevatorButtons
+        size={{ width: 50, height: size.height / 2 }}
+        floorCount={125}
+        clickHandler={floor => {
+          console.log(`FLOOR ${floor} SELECTED`);
+        }}
+      />
+    </OuterContainer>
   );
 };
 

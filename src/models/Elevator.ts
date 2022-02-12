@@ -6,7 +6,6 @@ interface ElevatorStopRequest {
 }
 
 export class Elevator {
-  //TODO:
   /**
    * The stop request queue is comprised of 2 parts: sameDirectionStops and oppositeDirectionStops -
    * the oppositeDirectionStops have a negative distance, because they are in the opposite direction.
@@ -15,6 +14,7 @@ export class Elevator {
    * The actual queue is sameDirectionStops first, then oppositeDirectionStops.
    */
   private readonly sameDirectionStops: ElevatorStopRequest[] = [];
+  /** See {@link sameDirectionStops} */
   private readonly oppositeDirectionStops: ElevatorStopRequest[] = [];
 
   private state: ElevatorWorkingState = 'idle';

@@ -16,8 +16,9 @@ interface DispatchCandidate {
 export class ElevatorSystem {
   private static readonly REQUEST_TIMEOUT = 10;
 
-  private readonly elevators: Elevator[] = [];
   private readonly pickupRequests: PickUpRequest[] = [];
+
+  public readonly elevators: Elevator[] = [];
 
   constructor(startingElevators: number) {
     for (let i = 0; i < startingElevators; i++) this.addElevator();
