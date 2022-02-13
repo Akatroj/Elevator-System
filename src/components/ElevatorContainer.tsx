@@ -1,11 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import AddElevatorButton from './AddElevatorButton';
-import Elevator from './Elevator';
+import { AddElevatorButton, Elevator } from '.';
 import { Size } from './utils';
-
-import { ElevatorSystem } from '../models/ElevatorSystem';
-import { ElevatorDirection, Floor } from '../models/utils';
+import { useElevatorSystem } from '../hooks';
 
 type Props = {};
 
@@ -27,7 +24,7 @@ const size: Size = {
 
 const MAX_ELEVATORS = 16;
 
-const ElevatorContainer = (props: Props) => {
+export const ElevatorContainer = (props: Props) => {
   // temp only
   const [open, setOpen] = useState(false);
   useEffect(() => {
@@ -37,7 +34,7 @@ const ElevatorContainer = (props: Props) => {
     }, 2000);
   }, [open]);
 
-  const { elevators, addElevator /*nextStep*/ } = useElevatorSystem(4);
+  const { elevators, addElevator /*nextStep*/ } = useElevatorSystem();
 
   // TODO: rename
   // TODO: add keys to array
@@ -52,47 +49,3 @@ const ElevatorContainer = (props: Props) => {
 
   return <ElevatorsContainer>{children}</ElevatorsContainer>;
 };
-
-//
-
-//
-
-function useElevatorSystem(floorCount: number = 4) {
-  const elevatorSystem = useMemo(() => new ElevatorSystem(floorCount), [floorCount]);
-  const [elevators, setElevators] = useState([...elevatorSystem.elevators]);
-
-  const update = useCallback(
-    () => setElevators([...elevatorSystem.elevators]),
-    [elevatorSystem]
-  );
-
-  const requestPickup = useCallback(
-    (sourceFloor: Floor, direction: ElevatorDirection) => {
-      elevatorSystem.pickup(sourceFloor, direction);
-      update();
-    },
-    [elevatorSystem, update]
-  );
-
-  const requestDropoff = useCallback(
-    (elevatorID: number, targetFloor: Floor) => {
-      elevatorSystem.dropoff(elevatorID, targetFloor);
-      update();
-    },
-    [elevatorSystem, update]
-  );
-
-  const nextStep = useCallback(() => {
-    elevatorSystem.step();
-    update();
-  }, [elevatorSystem, update]);
-
-  const addElevator = useCallback(() => {
-    elevatorSystem.addElevator();
-    update();
-  }, [elevatorSystem, update]);
-
-  return { elevators, requestPickup, requestDropoff, nextStep, addElevator };
-}
-
-export default ElevatorContainer;

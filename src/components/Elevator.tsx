@@ -1,7 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import ElevatorButtons from './ElevatorButtons';
-import ElevatorDoors from './ElevatorDoors';
+import { ElevatorButtons, ElevatorDoors } from '.';
 import { Size } from './utils';
 
 type OuterContainerProps = { size: Size };
@@ -32,7 +31,7 @@ const OuterContainer = styled.div<OuterContainerProps>`
   align-items: center;
 `;
 
-const Elevator = ({ open, size }: ElevatorProps) => {
+export const Elevator = ({ open, size }: ElevatorProps) => {
   return (
     <OuterContainer size={size}>
       <ElevatorDoors open={open} size={elevatorDoorSize} />
@@ -46,5 +45,3 @@ const Elevator = ({ open, size }: ElevatorProps) => {
     </OuterContainer>
   );
 };
-
-export default Elevator;

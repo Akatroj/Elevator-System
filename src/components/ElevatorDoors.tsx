@@ -39,7 +39,7 @@ const Door = styled.div<DoorProps>`
   }
 `;
 
-const ElevatorDoors = ({ open, size }: ElevatorDoorsProps) => {
+export const ElevatorDoors = ({ open, size }: ElevatorDoorsProps) => {
   const openClass = open ? 'open' : 'closed';
 
   return (
@@ -49,5 +49,3 @@ const ElevatorDoors = ({ open, size }: ElevatorDoorsProps) => {
     </>
   );
 };
-
-export default ElevatorDoors;

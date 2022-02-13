@@ -36,7 +36,7 @@ const Button = styled.div<ButtonProps>`
   outline-offset: -4px;
 `;
 
-const ElevatorButtons = ({ size, floorCount, clickHandler }: Props) => {
+export const ElevatorButtons = ({ size, floorCount, clickHandler }: Props) => {
   const buttonSize = useMemo<Size>(
     () => ({
       width: size.width / 2,
@@ -60,5 +60,3 @@ const ElevatorButtons = ({ size, floorCount, clickHandler }: Props) => {
 
   return <OuterContainer size={size}>{buttons}</OuterContainer>;
 };
-
-export default ElevatorButtons;

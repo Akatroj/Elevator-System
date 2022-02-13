@@ -38,7 +38,7 @@ const InnerContainer = styled.div<InnerContainerProps>`
   cursor: pointer;
 `;
 
-const AddElevatorButton = ({ size, clickHandler }: AddElevatorButtonProps) => {
+export const AddElevatorButton = ({ size, clickHandler }: AddElevatorButtonProps) => {
   const innerSize: Size = {
     width: size.width / 2,
     height: size.height / 2,
@@ -51,5 +51,3 @@ const AddElevatorButton = ({ size, clickHandler }: AddElevatorButtonProps) => {
     </OuterContainer>
   );
 };
-
-export default AddElevatorButton;
