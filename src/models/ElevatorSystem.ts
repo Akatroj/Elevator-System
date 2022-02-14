@@ -20,6 +20,8 @@ export class ElevatorSystem {
 
   public readonly elevators: Elevator[] = [];
 
+  private nextID = 0;
+
   constructor(startingElevators: number) {
     for (let i = 0; i < startingElevators; i++) this.addElevator();
   }
@@ -35,11 +37,13 @@ export class ElevatorSystem {
   }
 
   dropoff(elevatorID: number, targetFloor: Floor) {
-    this.elevators[elevatorID].addStop(targetFloor);
+    this.elevators.find(elevator => elevator.id === elevatorID)?.addStop(targetFloor);
   }
 
   step(): void {
+    console.group('move');
     this.elevators.forEach(elevator => elevator.step());
+    console.groupEnd();
     remove(this.pickupRequests, request => this.tryDispatchElevator(request));
   }
 
@@ -48,8 +52,12 @@ export class ElevatorSystem {
   }
 
   addElevator(): void {
-    const id = this.elevators.length;
-    this.elevators.push(new Elevator(id, 0));
+    this.elevators.push(new Elevator(this.nextID, 0));
+    this.nextID++;
+  }
+
+  removeElevator(elevatorID: number): void {
+    remove(this.elevators, elevator => elevator.id === elevatorID);
   }
 
   /**
@@ -66,7 +74,10 @@ export class ElevatorSystem {
     const targetFloor: Floor = pickupRequest.sourceFloor;
     const dispatchCandidates: DispatchCandidate[] = [];
     this.elevators.forEach(elevator => {
-      if (elevator.isIdle || inRange(targetFloor, elevator.currentFloor, elevator.nextStop)) {
+      if (
+        elevator.isIdle ||
+        inRange(targetFloor, elevator.currentFloor, elevator.afterNextStop)
+      ) {
         const distance = elevator.getDistance(targetFloor);
         dispatchCandidates.push({ elevator, distance });
       }
@@ -75,6 +86,7 @@ export class ElevatorSystem {
     if (dispatchCandidates.length === 0) {
       pickupRequest.timeout--;
       if (pickupRequest.timeout <= 0) {
+        // TODO: pick based on closest distance, not random
         sample(this.elevators)?.addStop(pickupRequest.sourceFloor);
         return true;
       }

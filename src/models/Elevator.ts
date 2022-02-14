@@ -1,4 +1,5 @@
 import { Floor, ElevatorWorkingState, ElevatorStatus } from './utils';
+import deepcopy from 'deepcopy';
 
 interface ElevatorStopRequest {
   targetFloor: Floor;
@@ -7,14 +8,14 @@ interface ElevatorStopRequest {
 
 export class Elevator {
   /**
-   * The stop request queue is comprised of 2 parts: sameDirectionStops and oppositeDirectionStops -
+   * The stop request queue is comprised of 2 parts: currentDirectionStops and oppositeDirectionStops -
    * the oppositeDirectionStops have a negative distance, because they are in the opposite direction.
    *
    * The queues are separated for ease of implementation.
-   * The actual queue is sameDirectionStops first, then oppositeDirectionStops.
+   * The actual queue is currentDirectionStops first, then oppositeDirectionStops.
    */
-  private readonly sameDirectionStops: ElevatorStopRequest[] = [];
-  /** See {@link sameDirectionStops} */
+  private readonly currentDirectionStops: ElevatorStopRequest[] = [];
+  /** See {@link currentDirectionStops} */
   private readonly oppositeDirectionStops: ElevatorStopRequest[] = [];
 
   private state: ElevatorWorkingState = 'idle';
@@ -26,7 +27,16 @@ export class Elevator {
   }
 
   get nextStop(): Floor {
-    return this.sameDirectionStops[0]?.targetFloor ?? this.currentFloor;
+    return this.currentDirectionStops[0]?.targetFloor ?? this.currentFloor;
+  }
+
+  /**
+   * Helper method that adds or subtracts 1 from nextStop based on current move direction.
+   * Necessary, because lodash inRange doesn't include the range's end value by default.
+   */
+  get afterNextStop(): Floor {
+    const direction = this.state !== 'idle' ? (this.state === 'up' ? 1 : -1) : 0;
+    return this.nextStop + direction;
   }
 
   get isIdle(): boolean {
@@ -43,19 +53,27 @@ export class Elevator {
   }
 
   step(): void {
-    // sanity check, shouldn't be possible
-    if (this.state === 'idle' || this.sameDirectionStops.length === 0) {
-      this.state = 'idle';
-      return;
-    }
+    // console.log({
+    //   name: `before`,
+    //   id: this.id,
+    //   currentFloor: this.currentFloor,
+    //   stops: deepcopy([...this.currentDirectionStops, ...this.oppositeDirectionStops]),
+    // });
+    if (this.state === 'idle') return;
 
     this.move();
+    // console.log({
+    //   name: `after`,
+    //   id: this.id,
+    //   currentFloor: this.currentFloor,
+    //   stops: deepcopy([...this.currentDirectionStops, ...this.oppositeDirectionStops]),
+    // });
 
     // request completed
-    if (this.currentFloor === this.nextStop) this.sameDirectionStops.shift();
+    if (this.currentFloor === this.nextStop) this.currentDirectionStops.shift();
 
     // all requests in current direction finished
-    if (this.sameDirectionStops.length === 0) {
+    if (this.currentDirectionStops.length === 0) {
       // no requests in opposite direction - the elevator becomes idle
       if (this.oppositeDirectionStops.length === 0) {
         this.state = 'idle';
@@ -91,13 +109,21 @@ export class Elevator {
     const distance = this.getDistance(targetFloor);
     if (distance === 0) return;
     const newReq: ElevatorStopRequest = { targetFloor, distance };
-    const arrayToInsert = distance > 0 ? this.sameDirectionStops : this.oppositeDirectionStops;
+    const arrayToInsert =
+      distance > 0 ? this.currentDirectionStops : this.oppositeDirectionStops;
+
+    if (arrayToInsert.find(stop => stop.targetFloor === targetFloor) !== undefined) return;
 
     let i = 0;
     for (const request of arrayToInsert) {
-      if (request.distance >= newReq.distance) i++;
+      if (request.distance <= newReq.distance) i++;
     }
     arrayToInsert.splice(i, 0, newReq);
+    if (this.state === 'idle') this.setState(this.nextStop);
+
+    console.log(
+      `Elevator ${this.id} added new stop: {targetFloor: ${targetFloor}, distance: ${distance}}, at idx: ${i}`
+    );
   }
 
   /**
@@ -111,20 +137,22 @@ export class Elevator {
     if (distance === 0) return;
 
     const newReq: ElevatorStopRequest = { targetFloor, distance };
-    this.sameDirectionStops.unshift(newReq);
+    this.currentDirectionStops.unshift(newReq);
   }
 
   private move(): void {
     switch (this.state) {
       case 'up':
         this.floor++;
-        return;
+        break;
       case 'down':
         this.floor--;
+        break;
+      default:
         return;
     }
 
-    this.sameDirectionStops.forEach(request => request.distance--);
+    this.currentDirectionStops.forEach(request => request.distance--);
     this.oppositeDirectionStops.forEach(request => request.distance--);
   }
 
@@ -133,12 +161,12 @@ export class Elevator {
    * sets the elevator state to face the direction of next target.
    */
   private bounceBack(): void {
-    const reqCopy = [...this.sameDirectionStops];
-    this.sameDirectionStops.splice(0, this.sameDirectionStops.length);
+    const reqCopy = [...this.currentDirectionStops];
+    this.currentDirectionStops.splice(0, this.currentDirectionStops.length);
 
     this.oppositeDirectionStops.forEach(req => {
       req.distance *= -1;
-      this.sameDirectionStops.push(req);
+      this.currentDirectionStops.push(req);
     });
 
     this.oppositeDirectionStops.splice(0, this.oppositeDirectionStops.length);

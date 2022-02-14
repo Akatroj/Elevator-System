@@ -46,12 +46,11 @@ export const ElevatorButtons = ({ size, floorCount, clickHandler }: Props) => {
   );
 
   // TODO: rename
-  // TODO: add keys to array
 
   const buttons = useMemo(
     () =>
       [...Array(floorCount)].map((_, floorIndex) => (
-        <Button size={buttonSize} onClick={() => clickHandler(floorIndex)}>
+        <Button key={floorIndex} size={buttonSize} onClick={() => clickHandler(floorIndex)}>
           {floorIndex}
         </Button>
       )),

@@ -1,12 +1,15 @@
 import { useCallback, useMemo, useState } from 'react';
 import { ElevatorSystem, ElevatorDirection, Floor } from '../models';
 
-export function useElevatorSystem(floorCount: number = 4) {
-  const elevatorSystem = useMemo(() => new ElevatorSystem(floorCount), [floorCount]);
-  const [elevators, setElevators] = useState([...elevatorSystem.elevators]);
+export function useElevatorSystem(startingElevators: number = 4) {
+  const elevatorSystem = useMemo(
+    () => new ElevatorSystem(startingElevators),
+    [startingElevators]
+  );
+  const [elevators, setElevators] = useState([...elevatorSystem.status()]);
 
   const update = useCallback(
-    () => setElevators([...elevatorSystem.elevators]),
+    () => setElevators([...elevatorSystem.status()]),
     [elevatorSystem]
   );
 
@@ -36,5 +39,13 @@ export function useElevatorSystem(floorCount: number = 4) {
     update();
   }, [elevatorSystem, update]);
 
-  return { elevators, requestPickup, requestDropoff, nextStep, addElevator };
+  const removeElevator = useCallback(
+    id => {
+      elevatorSystem.removeElevator(id);
+      update();
+    },
+    [elevatorSystem, update]
+  );
+
+  return { elevators, requestPickup, requestDropoff, nextStep, addElevator, removeElevator };
 }
