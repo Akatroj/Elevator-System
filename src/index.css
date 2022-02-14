@@ -4,4 +4,13 @@ body {
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  background-color: #ffead0;
+}
+
+@font-face {
+  font-family: 'Seven Segment Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Seven Segment Regular'), url('fonts/Seven Segment.woff') format('woff');
 }

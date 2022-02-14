@@ -47,5 +47,18 @@ export function useElevatorSystem(startingElevators: number = 4) {
     [elevatorSystem, update]
   );
 
-  return { elevators, requestPickup, requestDropoff, nextStep, addElevator, removeElevator };
+  const reset = useCallback(() => {
+    elevatorSystem.resetElevators();
+    update();
+  }, [elevatorSystem, update]);
+
+  return {
+    elevators,
+    requestPickup,
+    requestDropoff,
+    nextStep,
+    addElevator,
+    removeElevator,
+    reset,
+  };
 }

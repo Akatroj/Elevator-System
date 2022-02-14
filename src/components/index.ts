@@ -1,4 +1,4 @@
-export * from './AddElevatorButton';
+export * from './AddNewElevator';
 export * from './Elevator';
 export * from './ElevatorButtons';
 export * from './ElevatorContainer';

@@ -60,6 +60,11 @@ export class ElevatorSystem {
     remove(this.elevators, elevator => elevator.id === elevatorID);
   }
 
+  resetElevators(): void {
+    this.elevators.forEach(elevator => elevator.reset());
+    this.pickupRequests.splice(0, this.pickupRequests.length);
+  }
+
   /**
    * Tries to find the best elevator for the request by following this algorithm:
    * - find all elevators that are either idle, or passing by the requested floor

@@ -1,8 +1,15 @@
+import classNames from 'classnames';
 import React, { useMemo } from 'react';
 import styled, { css } from 'styled-components';
+import { Floor } from '../models';
 import { Size } from './utils';
 
-type Props = { floorCount: number; size: Size; clickHandler: (floor: number) => void };
+type ElevatorButtonsProps = {
+  floorCount: number;
+  clickedFloors: Floor[];
+  size: Size;
+  clickHandler: (floor: number) => void;
+};
 
 type OuterContainerProps = { size: Size };
 type ButtonProps = { size: Size };
@@ -30,13 +37,25 @@ const Button = styled.div<ButtonProps>`
       height: ${height - 2}px;
     `};
   cursor: pointer;
-  background-color: gray;
+  background-color: #3f4045;
   text-align: center;
-  outline: 1px dotted black;
-  outline-offset: -4px;
+  outline: 3px solid #747681;
+  outline-offset: -3px;
+  color: #f5efed;
+  &.active {
+    outline-color: red;
+  }
+  &.debug {
+    z-index: 50;
+  }
 `;
 
-export const ElevatorButtons = ({ size, floorCount, clickHandler }: Props) => {
+export const ElevatorButtons = ({
+  size,
+  floorCount,
+  clickedFloors,
+  clickHandler,
+}: ElevatorButtonsProps) => {
   const buttonSize = useMemo<Size>(
     () => ({
       width: size.width / 2,
@@ -47,15 +66,27 @@ export const ElevatorButtons = ({ size, floorCount, clickHandler }: Props) => {
 
   // TODO: rename
 
-  const buttons = useMemo(
-    () =>
-      [...Array(floorCount)].map((_, floorIndex) => (
-        <Button key={floorIndex} size={buttonSize} onClick={() => clickHandler(floorIndex)}>
+  const buttons = useMemo(() => {
+    const highlightButton: boolean[] = new Array(floorCount).fill(false);
+    clickedFloors.forEach(floor => (highlightButton[floor] = true));
+
+    return highlightButton.map((highlight, floorIndex) => {
+      const className = classNames({
+        active: highlight,
+        debug: true,
+      });
+      return (
+        <Button
+          key={floorIndex}
+          className={className}
+          size={buttonSize}
+          onClick={() => clickHandler(floorIndex)}
+        >
           {floorIndex}
         </Button>
-      )),
-    [floorCount, buttonSize, clickHandler]
-  );
+      );
+    });
+  }, [clickedFloors, floorCount, buttonSize, clickHandler]);
 
   return <OuterContainer size={size}>{buttons}</OuterContainer>;
 };

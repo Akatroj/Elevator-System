@@ -9,24 +9,32 @@ type Props = {};
 const ElevatorsContainer = styled.div`
   display: flex;
   flex-flow: row wrap;
-  /* justify-content: space-around; */
   align-items: flex-start;
+  gap: 20px;
 
-  background-color: aqua;
+  box-sizing: border-box;
   width: 100vw;
   height: 100vh;
+  padding: 20px;
 `;
 
 const size: Size = {
   width: 200,
-  height: 200,
+  height: 250,
 };
 
 const MAX_ELEVATORS = 16;
 
 export const ElevatorContainer = (props: Props) => {
-  const { elevators, requestPickup, requestDropoff, nextStep, addElevator, removeElevator } =
-    useElevatorSystem();
+  const {
+    elevators,
+    requestPickup,
+    requestDropoff,
+    nextStep,
+    addElevator,
+    removeElevator,
+    reset,
+  } = useElevatorSystem();
 
   // TODO: kliki stopuja interval, wszystko stopuje interval.
   // useEffect(() => {

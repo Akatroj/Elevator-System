@@ -32,6 +32,7 @@ export const Menu = ({ visible }: Props) => {
     <>
       <OuterContainer className={visible ? '' : 'hidden'}>
         <ElevatorButtons
+          clickedFloors={[]}
           floorCount={floorCount}
           clickHandler={(floor: Floor) => navigate(`/floors/${floor}`)}
           size={{ width: 50, height: 100 }}

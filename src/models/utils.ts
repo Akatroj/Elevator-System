@@ -8,4 +8,5 @@ export interface ElevatorStatus {
   currentFloor: Floor;
   nextStop: Floor;
   state: ElevatorWorkingState;
+  stops: Floor[];
 }

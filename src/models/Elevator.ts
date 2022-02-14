@@ -44,12 +44,22 @@ export class Elevator {
   }
 
   get status(): ElevatorStatus {
+    const stops = [...this.currentDirectionStops, ...this.oppositeDirectionStops].map(
+      stopReq => stopReq.targetFloor
+    );
     return {
       id: this.id,
       currentFloor: this.currentFloor,
       nextStop: this.nextStop,
       state: this.state,
+      stops,
     };
+  }
+
+  reset(): void {
+    this.currentDirectionStops.splice(0, this.currentDirectionStops.length);
+    this.oppositeDirectionStops.splice(0, this.oppositeDirectionStops.length);
+    this.floor = 0;
   }
 
   step(): void {
@@ -62,12 +72,13 @@ export class Elevator {
     if (this.state === 'idle') return;
 
     this.move();
-    // console.log({
-    //   name: `after`,
-    //   id: this.id,
-    //   currentFloor: this.currentFloor,
-    //   stops: deepcopy([...this.currentDirectionStops, ...this.oppositeDirectionStops]),
-    // });
+    console.log({
+      name: `after`,
+      id: this.id,
+      currentFloor: this.currentFloor,
+      state: this.state,
+      stops: deepcopy([...this.currentDirectionStops, ...this.oppositeDirectionStops]),
+    });
 
     // request completed
     if (this.currentFloor === this.nextStop) this.currentDirectionStops.shift();
@@ -116,7 +127,11 @@ export class Elevator {
 
     let i = 0;
     for (const request of arrayToInsert) {
-      if (request.distance <= newReq.distance) i++;
+      if (
+        (distance > 0 && request.distance <= distance) ||
+        (distance < 0 && request.distance >= distance)
+      )
+        i++;
     }
     arrayToInsert.splice(i, 0, newReq);
     if (this.state === 'idle') this.setState(this.nextStop);
