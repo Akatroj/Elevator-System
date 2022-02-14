@@ -3,7 +3,6 @@ import { useParams } from 'react-router';
 import styled, { css } from 'styled-components';
 import { faArrowDown, faArrowUp, faXmark, faPoo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useFloorCount } from '../hooks';
 import { ElevatorStatus, Floor } from '../models';
 import { Size } from './utils';
 import { ElevatorButtons, ElevatorDoors } from '.';
@@ -13,6 +12,7 @@ type OuterContainerProps = { size: Size };
 type ElevatorProps = {
   size: Size;
   model: ElevatorStatus;
+  floorCount: number;
   removeHandler: () => void;
   addNewStop: (targetFloor: Floor) => void;
 } & OuterContainerProps;
@@ -77,10 +77,14 @@ const FloorNumber = styled.span`
   margin-left: 5px;
 `;
 
-export const Elevator = ({ size, model, removeHandler, addNewStop }: ElevatorProps) => {
-  const { floorCount } = useFloorCount();
-  const { floor } = useParams();
-  const currentFloor = Number(floor);
+export const Elevator = ({
+  size,
+  model,
+  floorCount,
+  removeHandler,
+  addNewStop,
+}: ElevatorProps) => {
+  const currentFloor = Number(useParams().floor);
 
   const [deleted, setDeleted] = useState(false);
   const remove = () => {

@@ -1,12 +1,12 @@
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { SyntheticEvent, useState } from 'react';
 import { Outlet } from 'react-router';
 import styled from 'styled-components';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Menu } from './components/';
-import { FloorCountProvider } from './contexts/';
+import { ElevatorSystemProvider } from './contexts/';
 
-const AAAA = styled.div`
+const OuterContainer = styled.div`
   width: 100vw;
   height: 100vh;
 `;
@@ -25,8 +25,8 @@ export const App = () => {
   const [showMenu, setShowMenu] = useState(false);
 
   return (
-    <FloorCountProvider>
-      <AAAA onClick={() => setShowMenu(false)}>
+    <ElevatorSystemProvider>
+      <OuterContainer onClick={() => setShowMenu(false)}>
         <Burger>
           <FontAwesomeIcon
             icon={faBars}
@@ -38,7 +38,7 @@ export const App = () => {
         </Burger>
         <Menu visible={showMenu}></Menu>
         <Outlet />
-      </AAAA>
-    </FloorCountProvider>
+      </OuterContainer>
+    </ElevatorSystemProvider>
   );
 };

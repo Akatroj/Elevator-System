@@ -27,13 +27,13 @@ const MAX_ELEVATORS = 16;
 
 export const ElevatorContainer = (props: Props) => {
   const {
+    floorCount,
     elevators,
     requestPickup,
     requestDropoff,
     nextStep,
     addElevator,
     removeElevator,
-    reset,
   } = useElevatorSystem();
 
   // TODO: kliki stopuja interval, wszystko stopuje interval.
@@ -64,6 +64,7 @@ export const ElevatorContainer = (props: Props) => {
       <Elevator
         key={elevator.id}
         model={elevator}
+        floorCount={floorCount}
         size={size}
         removeHandler={() => removeElevator(elevator.id)}
         addNewStop={targetFloor => requestDropoff(elevator.id, targetFloor)}
@@ -73,7 +74,7 @@ export const ElevatorContainer = (props: Props) => {
       Elevators.push(<AddElevatorButton key={-1} size={size} clickHandler={addElevator} />);
 
     return Elevators;
-  }, [elevators, removeElevator, requestDropoff, addElevator]);
+  }, [elevators, floorCount, removeElevator, requestDropoff, addElevator]);
 
   return <ElevatorsContainer>{children}</ElevatorsContainer>;
 };

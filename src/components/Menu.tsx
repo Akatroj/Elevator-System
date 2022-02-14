@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { useFloorCount } from '../hooks';
+import { useElevatorSystem } from '../hooks';
 import { Floor } from '../models';
 import { ElevatorButtons } from '.';
 
-type Props = {
+type MenuProps = {
   visible: boolean;
 };
 
@@ -25,18 +25,47 @@ const OuterContainer = styled.div`
   }
 `;
 
-export const Menu = ({ visible }: Props) => {
+const Button = styled.button``;
+
+const FloorCountForm = styled.form``;
+
+export const Menu = ({ visible }: MenuProps) => {
   const navigate = useNavigate();
-  const { floorCount } = useFloorCount();
+  const { floorCount, setFloorCount, reset } = useElevatorSystem();
+
+  const [newFloorCount, setNewFloorCount] = useState(floorCount);
   return (
     <>
-      <OuterContainer className={visible ? '' : 'hidden'}>
+      <OuterContainer
+        className={visible ? '' : 'hidden'}
+        onClick={(event: SyntheticEvent) => event.stopPropagation()}
+      >
         <ElevatorButtons
           clickedFloors={[]}
           floorCount={floorCount}
           clickHandler={(floor: Floor) => navigate(`/floors/${floor}`)}
           size={{ width: 50, height: 100 }}
         ></ElevatorButtons>
+        <Button onClick={() => console.log('not yet implemented')}>{'Debug on'}</Button>
+        <Button onClick={() => console.log('not yet implemented')}>{'Interval on'}</Button>
+        <Button onClick={() => console.log('not yet implemented')}>{'Demo on'}</Button>
+        {/* TODO: Extract component */}
+        <FloorCountForm>
+          <input
+            name="floorCount"
+            value={newFloorCount}
+            onChange={event => setNewFloorCount(Number(event.target.value))}
+          />
+          <label htmlFor="floorCount">Change the number of floors.</label>
+          <Button
+            onClick={() =>
+              window.confirm('Are you sure?\nThis will reset all elevators.') ||
+              setFloorCount(newFloorCount)
+            }
+          >
+            {'Apply'}
+          </Button>
+        </FloorCountForm>
       </OuterContainer>
     </>
   );
