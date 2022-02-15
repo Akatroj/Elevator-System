@@ -15,10 +15,10 @@ type OuterContainerProps = { size: Size };
 type ButtonProps = { size: Size };
 
 const OuterContainer = styled.div<OuterContainerProps>`
+  /* TODO: width and height based on fontsize */
   display: flex;
   flex-flow: row wrap;
 
-  /* TODO: width and height based on fontsize */
   ${({ size: { width, height } }) => css`
     width: ${width}px;
     height: ${height}px;

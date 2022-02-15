@@ -6,6 +6,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   background-color: #ffead0;
+  overflow: hidden; /* hide my mistakes */
 }
 
 @font-face {

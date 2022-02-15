@@ -3,7 +3,7 @@ import { Outlet } from 'react-router';
 import styled from 'styled-components';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Menu } from './components/';
+import { Menu, TopPanel } from './components/';
 import { ElevatorSystemProvider } from './contexts/';
 
 const OuterContainer = styled.div`
@@ -29,6 +29,7 @@ export const App = () => {
   return (
     <ElevatorSystemProvider>
       <OuterContainer onClick={hideMenu}>
+        <TopPanel />
         <Burger>
           <FontAwesomeIcon
             icon={faBars}

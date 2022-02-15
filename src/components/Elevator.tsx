@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router';
 import styled, { css } from 'styled-components';
 import { ElevatorStatus, Floor } from '../models';
 import { Size } from './utils';
 import { FloorButtons, ElevatorDoors, ElevatorScreen, DeleteButton } from '.';
+import { useCurrentFloor } from '../hooks';
 
 type OuterContainerProps = { size: Size };
 
@@ -57,7 +57,7 @@ export const Elevator = ({
   removeHandler,
   addNewStop,
 }: ElevatorProps) => {
-  const currentFloor = Number(useParams().floor);
+  const currentFloor = useCurrentFloor();
 
   const [deleted, setDeleted] = useState(false);
   const remove = () => {
