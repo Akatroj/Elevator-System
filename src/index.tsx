@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import { App } from './App';
 import { ElevatorContainer } from './components/';
@@ -10,7 +10,7 @@ import './index.css';
 ReactDOM.render(
   <React.StrictMode>
     <DebugModeProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<Navigate to="/floors/0" />} />
           <Route path="floors" element={<App />}>
@@ -18,7 +18,7 @@ ReactDOM.render(
           </Route>
           <Route path="*" element={<h1>Nothing here 😔</h1>} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </DebugModeProvider>
   </React.StrictMode>,
   document.getElementById('root')

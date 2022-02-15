@@ -4,7 +4,7 @@
 
 Simple application that controls the movement of elevators in a builing.
 
-<!-- You can view the deployed page at [this link]() -->
+You can view the deployed page at [this link](https://akatroj.github.io/Elevator-System/)
 
 Features: 
 * Send an elevator to a target floor - the elevator will organise it's stops in the most efficient manner.
