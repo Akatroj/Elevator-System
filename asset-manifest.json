@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.985c2cae.css",
+    "main.js": "/static/js/main.d400545b.js",
+    "static/js/787.5c6dc505.chunk.js": "/static/js/787.5c6dc505.chunk.js",
+    "static/media/Seven Segment.woff": "/static/media/Seven Segment.8d91b4bac152a7ea0daa.woff",
+    "index.html": "/index.html",
+    "main.985c2cae.css.map": "/static/css/main.985c2cae.css.map",
+    "main.d400545b.js.map": "/static/js/main.d400545b.js.map",
+    "787.5c6dc505.chunk.js.map": "/static/js/787.5c6dc505.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.985c2cae.css",
+    "static/js/main.d400545b.js"
+  ]
+}
