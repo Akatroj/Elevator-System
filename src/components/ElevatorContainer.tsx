@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { AddElevatorButton, Elevator } from '.';
 import { Size } from './utils';
@@ -26,39 +26,10 @@ const size: Size = {
 const MAX_ELEVATORS = 16;
 
 export const ElevatorContainer = (props: Props) => {
-  const {
-    floorCount,
-    elevators,
-    requestPickup,
-    requestDropoff,
-    nextStep,
-    addElevator,
-    removeElevator,
-  } = useElevatorSystem();
-
-  // TODO: kliki stopuja interval, wszystko stopuje interval.
-  // useEffect(() => {
-  //   const listener = (event: KeyboardEvent) => {
-  //     nextStep();
-  //   };
-  //   document.addEventListener('keydown', listener);
-  //   return () => document.removeEventListener('keydown', listener);
-  // }, [nextStep]);
-  // TODO: remove mounted?
-  useEffect(() => {
-    let mounted = true;
-    const interval = setInterval(() => {
-      if (!mounted) return;
-      nextStep();
-    }, 1000);
-    return () => {
-      mounted = false;
-      clearInterval(interval);
-    };
-  }, [nextStep]);
+  const { floorCount, elevators, requestDropoff, addElevator, removeElevator } =
+    useElevatorSystem();
 
   // TODO: rename
-
   const children = useMemo(() => {
     const Elevators = elevators.map(elevator => (
       <Elevator

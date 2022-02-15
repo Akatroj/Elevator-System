@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
 import styled, { css } from 'styled-components';
+import { useDebugMode } from '../hooks';
 import { Floor } from '../models';
 import { Size } from './utils';
 
@@ -28,6 +29,10 @@ const OuterContainer = styled.div<OuterContainerProps>`
   &::-webkit-scrollbar {
     width: 0px;
   }
+
+  &.debug {
+    z-index: 50;
+  }
 `;
 
 const Button = styled.div<ButtonProps>`
@@ -44,11 +49,9 @@ const Button = styled.div<ButtonProps>`
   outline: 3px solid #747681;
   outline-offset: -3px;
   color: #f5efed;
+
   &.active {
     outline-color: red;
-  }
-  &.debug {
-    z-index: 50;
   }
 `;
 
@@ -66,6 +69,9 @@ export const FloorButtons = ({
     [size]
   );
 
+  const { debug } = useDebugMode();
+  const containerClassName = classNames({ debug });
+
   // TODO: rename
 
   const buttons = useMemo(() => {
@@ -75,7 +81,6 @@ export const FloorButtons = ({
     return highlightButton.map((highlight, floorIndex) => {
       const className = classNames({
         active: highlight,
-        debug: true,
       });
       return (
         <Button
@@ -90,5 +95,9 @@ export const FloorButtons = ({
     });
   }, [clickedFloors, floorCount, buttonSize, clickHandler]);
 
-  return <OuterContainer size={size}>{buttons}</OuterContainer>;
+  return (
+    <OuterContainer size={size} className={containerClassName}>
+      {buttons}
+    </OuterContainer>
+  );
 };

@@ -1,9 +1,10 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { useElevatorSystem } from '../hooks';
+import { useDebugMode, useElevatorSystem } from '../hooks';
 import { Floor } from '../models';
 import { DeleteButton, FloorButtons } from '.';
+import classNames from 'classnames';
 
 type MenuProps = {
   visible: boolean;
@@ -36,37 +37,39 @@ const HideButton = styled(DeleteButton)`
 
 export const Menu = ({ visible, hide }: MenuProps) => {
   const navigate = useNavigate();
-  const { floorCount, setFloorCount, reset } = useElevatorSystem();
+  const { floorCount, setFloorCount, paused, togglePaused, toggleDemo, demoPlaying } =
+    useElevatorSystem();
+  const { debug, toggleDebug } = useDebugMode();
 
   const [newFloorCount, setNewFloorCount] = useState(floorCount);
+
+  const className = classNames({ hidden: !visible });
   return (
-    <>
-      <OuterContainer
-        className={visible ? '' : 'hidden'}
-        onClick={(event: SyntheticEvent) => event.stopPropagation()}
-      >
-        <HideButton clickHandler={hide} />
-        <FloorButtons
-          clickedFloors={[]}
-          floorCount={floorCount}
-          clickHandler={(floor: Floor) => navigate(`/floors/${floor}`)}
-          size={{ width: 50, height: 100 }}
-        ></FloorButtons>
-        <Button onClick={() => console.log('not yet implemented')}>{'Debug on'}</Button>
-        <Button onClick={() => console.log('not yet implemented')}>{'Interval on'}</Button>
-        <Button onClick={() => console.log('not yet implemented')}>{'Demo on'}</Button>
-        {/* TODO: Extract component */}
-        <FloorCountForm onSubmit={(event: SyntheticEvent) => event.preventDefault()}>
-          <input
-            name="floorCount"
-            min={2}
-            value={newFloorCount}
-            onChange={event => setNewFloorCount(Number(event.target.value))}
-          />
-          <label htmlFor="floorCount">Change the number of floors.</label>
-          <Button onClick={() => setFloorCount(newFloorCount)}>{'Apply'}</Button>
-        </FloorCountForm>
-      </OuterContainer>
-    </>
+    <OuterContainer
+      className={className}
+      onClick={(event: SyntheticEvent) => event.stopPropagation()}
+    >
+      <HideButton clickHandler={hide} />
+      <FloorButtons
+        clickedFloors={[]}
+        floorCount={floorCount}
+        clickHandler={(floor: Floor) => navigate(`/floors/${floor}`)}
+        size={{ width: 50, height: 100 }}
+      ></FloorButtons>
+      <Button onClick={togglePaused}>{paused ? 'Start interval' : 'Pause interval'}</Button>
+      <Button onClick={toggleDebug}>{debug ? 'Stop debug mode' : 'Start debug mode'}</Button>
+      <Button onClick={toggleDemo}>{demoPlaying ? 'Stop demo' : 'Start demo'}</Button>
+      {/* TODO: Extract component */}
+      <FloorCountForm onSubmit={(event: SyntheticEvent) => event.preventDefault()}>
+        <input
+          name="floorCount"
+          min={2}
+          value={newFloorCount}
+          onChange={event => setNewFloorCount(Number(event.target.value))}
+        />
+        <label htmlFor="floorCount">Change the number of floors.</label>
+        <Button onClick={() => setFloorCount(newFloorCount)}>{'Apply'}</Button>
+      </FloorCountForm>
+    </OuterContainer>
   );
 };

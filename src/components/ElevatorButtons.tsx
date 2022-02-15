@@ -13,6 +13,10 @@ const OuterContainer = styled.div`
   flex-flow: column nowrap;
   font-size: 30pt;
 
+  background-color: darkgray;
+
+  color: dimgray;
+
   .active {
     color: red;
   }

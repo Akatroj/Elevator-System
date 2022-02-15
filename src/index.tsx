@@ -4,19 +4,22 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import { App } from './App';
 import { ElevatorContainer } from './components/';
+import { DebugModeProvider } from './contexts';
 import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/floors/0" />}></Route>
-        <Route path="floors" element={<App />}>
-          <Route path=":floor" element={<ElevatorContainer />} />
-        </Route>
-        <Route path="*" element={<h1>Nothing here 😔</h1>} />
-      </Routes>
-    </BrowserRouter>
+    <DebugModeProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/floors/0" />} />
+          <Route path="floors" element={<App />}>
+            <Route path=":floor" element={<ElevatorContainer />} />
+          </Route>
+          <Route path="*" element={<h1>Nothing here 😔</h1>} />
+        </Routes>
+      </BrowserRouter>
+    </DebugModeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
