@@ -36,9 +36,11 @@ export const ElevatorSystemProvider = ({ children }: ElevatorSystemProviderProps
 
   const setFloorCount = useCallback(
     (newValue: number) => {
-      _setFloorCount(newValue);
-      elevatorSystem.resetElevators();
-      update();
+      if (newValue > 1 && window.confirm('Are you sure?\nThis will reset all elevators.')) {
+        _setFloorCount(newValue);
+        elevatorSystem.resetElevators();
+        update();
+      }
     },
     [elevatorSystem, _setFloorCount, update]
   );

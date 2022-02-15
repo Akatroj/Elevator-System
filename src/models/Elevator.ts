@@ -60,6 +60,7 @@ export class Elevator {
     this.currentDirectionStops.splice(0, this.currentDirectionStops.length);
     this.oppositeDirectionStops.splice(0, this.oppositeDirectionStops.length);
     this.floor = 0;
+    this.state = 'idle';
   }
 
   step(): void {

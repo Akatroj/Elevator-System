@@ -24,9 +24,11 @@ const Burger = styled.div`
 export const App = () => {
   const [showMenu, setShowMenu] = useState(false);
 
+  const hideMenu = () => setShowMenu(false);
+
   return (
     <ElevatorSystemProvider>
-      <OuterContainer onClick={() => setShowMenu(false)}>
+      <OuterContainer onClick={hideMenu}>
         <Burger>
           <FontAwesomeIcon
             icon={faBars}
@@ -36,7 +38,7 @@ export const App = () => {
             }}
           />
         </Burger>
-        <Menu visible={showMenu}></Menu>
+        <Menu visible={showMenu} hide={hideMenu}></Menu>
         <Outlet />
       </OuterContainer>
     </ElevatorSystemProvider>

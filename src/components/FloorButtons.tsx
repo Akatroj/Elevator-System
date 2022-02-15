@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import { Floor } from '../models';
 import { Size } from './utils';
 
-type ElevatorButtonsProps = {
+type FloorButtonsProps = {
   floorCount: number;
   clickedFloors: Floor[];
   size: Size;
@@ -17,6 +17,8 @@ type ButtonProps = { size: Size };
 const OuterContainer = styled.div<OuterContainerProps>`
   display: flex;
   flex-flow: row wrap;
+
+  /* TODO: width and height based on fontsize */
   ${({ size: { width, height } }) => css`
     width: ${width}px;
     height: ${height}px;
@@ -50,12 +52,12 @@ const Button = styled.div<ButtonProps>`
   }
 `;
 
-export const ElevatorButtons = ({
+export const FloorButtons = ({
   size,
   floorCount,
   clickedFloors,
   clickHandler,
-}: ElevatorButtonsProps) => {
+}: FloorButtonsProps) => {
   const buttonSize = useMemo<Size>(
     () => ({
       width: size.width / 2,

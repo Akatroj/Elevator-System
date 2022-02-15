@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
 import styled, { css } from 'styled-components';
-import { faArrowDown, faArrowUp, faXmark, faPoo } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ElevatorStatus, Floor } from '../models';
 import { Size } from './utils';
-import { ElevatorButtons, ElevatorDoors } from '.';
+import { FloorButtons, ElevatorDoors, ElevatorScreen, DeleteButton } from '.';
 
 type OuterContainerProps = { size: Size };
 
@@ -23,14 +21,8 @@ const elevatorDoorSize: Size = {
   height: 150,
 };
 
-const DeleteButton = styled.div`
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  z-index: 10;
-
-  color: red;
-  cursor: pointer;
+const HiddenDeleteButton = styled(DeleteButton)`
+  visibility: hidden;
 `;
 
 const OuterContainer = styled.div<OuterContainerProps>`
@@ -53,28 +45,9 @@ const OuterContainer = styled.div<OuterContainerProps>`
     opacity: 0;
   }
 
-  ${DeleteButton} {
-    visibility: hidden;
-  }
-
-  &:hover ${DeleteButton} {
+  &:hover ${HiddenDeleteButton} {
     visibility: visible;
   }
-`;
-
-const StateDisplay = styled.div`
-  position: absolute;
-  top: 10px;
-
-  font-family: 'Seven Segment Regular';
-  background-color: black;
-  padding: 5px;
-  color: orange;
-  font-size: 0.9em;
-`;
-
-const FloorNumber = styled.span`
-  margin-left: 5px;
 `;
 
 export const Elevator = ({
@@ -92,22 +65,14 @@ export const Elevator = ({
     setTimeout(() => removeHandler(), 500);
   };
 
-  const stateIcon =
-    model.state === 'idle' ? faPoo : model.state === 'up' ? faArrowUp : faArrowDown;
-
   return (
     <OuterContainer className={deleted ? 'deleted' : ''} size={size}>
-      <DeleteButton onClick={remove}>
-        <FontAwesomeIcon icon={faXmark} />
-      </DeleteButton>
+      <HiddenDeleteButton clickHandler={remove} />
       {/* TODO: inner elevator container */}
       <>
-        <StateDisplay>
-          <FontAwesomeIcon icon={stateIcon} fixedWidth />
-          <FloorNumber> {model.currentFloor}</FloorNumber>
-        </StateDisplay>
+        <ElevatorScreen elevatorState={model.state} currentFloor={model.currentFloor} />
         <ElevatorDoors open={model.currentFloor === currentFloor} size={elevatorDoorSize} />
-        <ElevatorButtons
+        <FloorButtons
           clickedFloors={model.stops}
           size={{ width: 50, height: size.height / 2 }}
           floorCount={floorCount}
