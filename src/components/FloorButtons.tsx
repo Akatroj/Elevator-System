@@ -1,29 +1,21 @@
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
+import { Wrapper } from '.';
 import { useDebugMode } from '../hooks';
 import { Floor } from '../models';
-import { Size } from './utils';
 
 type FloorButtonsProps = {
   floorCount: number;
   clickedFloors: Floor[];
-  size: Size;
   clickHandler: (floor: number) => void;
 };
 
-type OuterContainerProps = { size: Size };
-type ButtonProps = { size: Size };
-
-const OuterContainer = styled.div<OuterContainerProps>`
-  /* TODO: width and height based on fontsize */
-  display: flex;
+const FloorButtonsWrapper = styled(Wrapper)`
   flex-flow: row wrap;
 
-  ${({ size: { width, height } }) => css`
-    width: ${width}px;
-    height: ${height}px;
-  `};
+  width: 4em;
+  height: 7em;
   overflow: hidden auto;
   scrollbar-width: none;
   &::-webkit-scrollbar {
@@ -35,20 +27,23 @@ const OuterContainer = styled.div<OuterContainerProps>`
   }
 `;
 
-const Button = styled.div<ButtonProps>`
+const Button = styled.span`
+  display: block;
   box-sizing: border-box;
-  margin: 1px;
-  ${({ size: { width, height } }) =>
-    css`
-      width: ${width - 2}px;
-      height: ${height - 2}px;
-    `};
+  margin: 0.1em;
+
+  width: calc(2em - 0.2em);
+  height: calc(2em - 0.2em);
+  line-height: calc(2em - 0.2em);
+
   cursor: pointer;
   background-color: #3f4045;
   text-align: center;
-  outline: 3px solid #747681;
-  outline-offset: -3px;
+  outline: 0.32em solid #747681;
+  outline-offset: -0.32em;
   color: #f5efed;
+
+  transition: outline-color 0.3s ease-in;
 
   &.active {
     outline-color: red;
@@ -56,26 +51,15 @@ const Button = styled.div<ButtonProps>`
 `;
 
 export const FloorButtons = ({
-  size,
   floorCount,
   clickedFloors,
   clickHandler,
 }: FloorButtonsProps) => {
-  const buttonSize = useMemo<Size>(
-    () => ({
-      width: size.width / 2,
-      height: size.width / 2,
-    }),
-    [size]
-  );
-
   const { debug } = useDebugMode();
   const containerClassName = classNames({ debug });
 
-  // TODO: rename
-
   const buttons = useMemo(() => {
-    const highlightButton: boolean[] = new Array(floorCount).fill(false);
+    const highlightButton = new Array<boolean>(floorCount).fill(false);
     clickedFloors.forEach(floor => (highlightButton[floor] = true));
 
     return highlightButton.map((highlight, floorIndex) => {
@@ -86,18 +70,13 @@ export const FloorButtons = ({
         <Button
           key={floorIndex}
           className={className}
-          size={buttonSize}
           onClick={() => clickHandler(floorIndex)}
         >
           {floorIndex}
         </Button>
       );
     });
-  }, [clickedFloors, floorCount, buttonSize, clickHandler]);
+  }, [clickedFloors, floorCount, clickHandler]);
 
-  return (
-    <OuterContainer size={size} className={containerClassName}>
-      {buttons}
-    </OuterContainer>
-  );
+  return <FloorButtonsWrapper className={containerClassName}>{buttons}</FloorButtonsWrapper>;
 };

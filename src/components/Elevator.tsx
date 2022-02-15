@@ -1,39 +1,23 @@
-import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
+import React from 'react';
+import styled from 'styled-components';
 import { ElevatorStatus, Floor } from '../models';
-import { Size } from './utils';
-import { FloorButtons, ElevatorDoors, ElevatorScreen, DeleteButton } from '.';
-import { useCurrentFloor } from '../hooks';
-
-type OuterContainerProps = { size: Size };
+import { FloorButtons, ElevatorDoors, ElevatorScreen, DeleteButton, Wrapper } from '.';
+import { useCurrentFloor, useSetClass } from '../hooks';
 
 type ElevatorProps = {
-  size: Size;
   model: ElevatorStatus;
   floorCount: number;
   removeHandler: () => void;
   addNewStop: (targetFloor: Floor) => void;
-} & OuterContainerProps;
-
-const elevatorDoorSize: Size = {
-  // TODO: fix
-  width: 50,
-  height: 150,
 };
 
 const HiddenDeleteButton = styled(DeleteButton)`
   visibility: hidden;
 `;
 
-const OuterContainer = styled.div<OuterContainerProps>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  ${({ size: { width, height } }) => css`
-    width: ${width}px;
-    height: ${height}px;
-  `}
+const ElevatorWrapper = styled(Wrapper)`
+  width: 12em;
+  height: 15em;
 
   position: relative;
   background-color: dimgray;
@@ -50,35 +34,23 @@ const OuterContainer = styled.div<OuterContainerProps>`
   }
 `;
 
-export const Elevator = ({
-  size,
-  model,
-  floorCount,
-  removeHandler,
-  addNewStop,
-}: ElevatorProps) => {
+export const Elevator = ({ model, floorCount, removeHandler, addNewStop }: ElevatorProps) => {
   const currentFloor = useCurrentFloor();
 
-  const [deleted, setDeleted] = useState(false);
-  const remove = () => {
-    setDeleted(true);
-    setTimeout(() => removeHandler(), 500);
-  };
+  const { className, activateClass } = useSetClass('deleted', 500);
 
   return (
-    <OuterContainer className={deleted ? 'deleted' : ''} size={size}>
-      <HiddenDeleteButton clickHandler={remove} />
-      {/* TODO: inner elevator container */}
-      <>
+    <ElevatorWrapper className={className}>
+      <HiddenDeleteButton clickHandler={() => activateClass(removeHandler)} />
+      <Wrapper>
         <ElevatorScreen elevatorState={model.state} currentFloor={model.currentFloor} />
-        <ElevatorDoors open={model.currentFloor === currentFloor} size={elevatorDoorSize} />
+        <ElevatorDoors open={model.currentFloor === currentFloor} />
         <FloorButtons
           clickedFloors={model.stops}
-          size={{ width: 50, height: size.height / 2 }}
           floorCount={floorCount}
           clickHandler={addNewStop}
         />
-      </>
-    </OuterContainer>
+      </Wrapper>
+    </ElevatorWrapper>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { AddElevatorButton, Elevator } from '.';
-import { Size } from './utils';
 import { useElevatorSystem } from '../hooks';
 
 type Props = {};
@@ -18,11 +17,6 @@ const ElevatorsContainer = styled.div`
   padding: 20px;
 `;
 
-const size: Size = {
-  width: 200,
-  height: 250,
-};
-
 const MAX_ELEVATORS = 16;
 
 export const ElevatorContainer = (props: Props) => {
@@ -36,13 +30,12 @@ export const ElevatorContainer = (props: Props) => {
         key={elevator.id}
         model={elevator}
         floorCount={floorCount}
-        size={size}
         removeHandler={() => removeElevator(elevator.id)}
         addNewStop={targetFloor => requestDropoff(elevator.id, targetFloor)}
       />
     ));
     if (elevators.length < MAX_ELEVATORS)
-      Elevators.push(<AddElevatorButton key={-1} size={size} clickHandler={addElevator} />);
+      Elevators.push(<AddElevatorButton key={-1} clickHandler={addElevator} />);
 
     return Elevators;
   }, [elevators, floorCount, removeElevator, requestDropoff, addElevator]);

@@ -54,7 +54,7 @@ export const Menu = ({ visible, hide }: MenuProps) => {
         clickedFloors={[]}
         floorCount={floorCount}
         clickHandler={(floor: Floor) => navigate(`/floors/${floor}`)}
-        size={{ width: 50, height: 100 }}
+        // size={{ width: 50, height: 100 }}
       ></FloorButtons>
       <Button onClick={togglePaused}>{paused ? 'Start interval' : 'Pause interval'}</Button>
       <Button onClick={toggleDebug}>{debug ? 'Stop debug mode' : 'Start debug mode'}</Button>

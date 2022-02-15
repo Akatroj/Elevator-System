@@ -1,3 +1,4 @@
+export * from './utils';
 export * from './AddNewElevator';
 export * from './DeleteButton';
 export * from './Elevator';
@@ -8,4 +9,3 @@ export * from './ElevatorScreen';
 export * from './FloorButtons';
 export * from './Menu';
 export * from './TopPanel';
-export * from './utils';

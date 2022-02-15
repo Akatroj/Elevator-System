@@ -8,7 +8,7 @@ import { ElevatorDirection } from '../models';
 
 type ButtonActiveState = { [key in ElevatorDirection]: boolean };
 
-const OuterContainer = styled.div`
+const ElevatorButtonsWrapper = styled.div`
   display: flex;
   flex-flow: column nowrap;
   font-size: 30pt;
@@ -51,7 +51,7 @@ export const ElevatorButtons = () => {
   const upClass = classNames({ pointer: true, active: active.up });
   const downClass = classNames({ pointer: true, active: active.down });
   return (
-    <OuterContainer>
+    <ElevatorButtonsWrapper>
       <FontAwesomeIcon
         icon={faPlay}
         rotation={270}
@@ -66,6 +66,6 @@ export const ElevatorButtons = () => {
         onClick={() => clickHandler('down')}
         fixedWidth
       />
-    </OuterContainer>
+    </ElevatorButtonsWrapper>
   );
 };

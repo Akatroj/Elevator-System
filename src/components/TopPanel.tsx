@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ElevatorButtons } from '.';
+import { Wrapper } from '.';
 import { useCurrentFloor } from '../hooks';
+import { ElevatorButtons } from './ElevatorButtons';
 
 type Props = {};
 
-const OuterContainer = styled.div`
-  display: flex;
+const TopPanelWrapper = styled(Wrapper)`
   justify-content: space-between;
   width: 80%;
 `;
@@ -14,9 +14,9 @@ const OuterContainer = styled.div`
 export const TopPanel = (props: Props) => {
   const currentFloor = useCurrentFloor();
   return (
-    <OuterContainer>
-      <h2> witaj na pietrze {currentFloor}</h2>
+    <TopPanelWrapper>
       <ElevatorButtons />
-    </OuterContainer>
+      <h2> witaj na pietrze {currentFloor}</h2>
+    </TopPanelWrapper>
   );
 };
