@@ -41,9 +41,7 @@ export class ElevatorSystem {
   }
 
   step(): void {
-    console.group('move');
     this.elevators.forEach(elevator => elevator.step());
-    console.groupEnd();
     remove(this.pickupRequests, request => this.tryDispatchElevator(request));
   }
 

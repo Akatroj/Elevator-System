@@ -1,5 +1,4 @@
 import { Floor, ElevatorWorkingState, ElevatorStatus } from './utils';
-import deepcopy from 'deepcopy';
 
 interface ElevatorStopRequest {
   targetFloor: Floor;
@@ -64,22 +63,9 @@ export class Elevator {
   }
 
   step(): void {
-    // console.log({
-    //   name: `before`,
-    //   id: this.id,
-    //   currentFloor: this.currentFloor,
-    //   stops: deepcopy([...this.currentDirectionStops, ...this.oppositeDirectionStops]),
-    // });
     if (this.state === 'idle') return;
 
     this.move();
-    console.log({
-      name: `after`,
-      id: this.id,
-      currentFloor: this.currentFloor,
-      state: this.state,
-      stops: deepcopy([...this.currentDirectionStops, ...this.oppositeDirectionStops]),
-    });
 
     // request completed
     if (this.currentFloor === this.nextStop) this.currentDirectionStops.shift();
@@ -136,10 +122,6 @@ export class Elevator {
     }
     arrayToInsert.splice(i, 0, newReq);
     if (this.state === 'idle') this.setState(this.nextStop);
-
-    console.log(
-      `Elevator ${this.id} added new stop: {targetFloor: ${targetFloor}, distance: ${distance}}, at idx: ${i}`
-    );
   }
 
   /**
@@ -150,9 +132,15 @@ export class Elevator {
   addImmediateStop(targetFloor: Floor, distance?: number) {
     this.setState(targetFloor);
     distance = distance ?? this.getDistance(targetFloor);
-    if (distance === 0) return;
-
     const newReq: ElevatorStopRequest = { targetFloor, distance };
+    if (
+      distance === 0 ||
+      this.currentDirectionStops.find(stop => stop.targetFloor === targetFloor) !== undefined
+    ) {
+      this.setState(this.nextStop);
+      return;
+    }
+
     this.currentDirectionStops.unshift(newReq);
   }
 
