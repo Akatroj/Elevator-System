@@ -156,11 +156,11 @@ function useDemo(elevatorSystem: ElevatorSystem, floorCount: number, reset: () =
   const demoStep = useCallback(() => {
     if (demoPlaying) {
       const direction = random(1) % 2 === 0 ? 'up' : 'down';
-      const pickupFloor = random(floorCount);
+      const pickupFloor = random(floorCount - 1);
       elevatorSystem.pickup(pickupFloor, direction);
 
       const elevator = sample(elevatorSystem.elevators);
-      const targetFloor = random(floorCount);
+      const targetFloor = random(floorCount - 1);
       elevator?.addStop(targetFloor);
     }
   }, [demoPlaying, elevatorSystem, floorCount]);

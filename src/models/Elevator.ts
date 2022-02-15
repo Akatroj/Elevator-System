@@ -29,15 +29,6 @@ export class Elevator {
     return this.currentDirectionStops[0]?.targetFloor ?? this.currentFloor;
   }
 
-  /**
-   * Helper method that adds or subtracts 1 from nextStop based on current move direction.
-   * Necessary, because lodash inRange doesn't include the range's end value by default.
-   */
-  get afterNextStop(): Floor {
-    const direction = this.state !== 'idle' ? (this.state === 'up' ? 1 : -1) : 0;
-    return this.nextStop + direction;
-  }
-
   get isIdle(): boolean {
     return this.state === 'idle';
   }

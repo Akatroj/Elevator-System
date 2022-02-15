@@ -77,10 +77,7 @@ export class ElevatorSystem {
     const targetFloor: Floor = pickupRequest.sourceFloor;
     const dispatchCandidates: DispatchCandidate[] = [];
     this.elevators.forEach(elevator => {
-      if (
-        elevator.isIdle ||
-        inRange(targetFloor, elevator.currentFloor, elevator.afterNextStop)
-      ) {
+      if (elevator.isIdle || inRange(targetFloor, elevator.currentFloor, elevator.nextStop)) {
         const distance = elevator.getDistance(targetFloor);
         dispatchCandidates.push({ elevator, distance });
       }
