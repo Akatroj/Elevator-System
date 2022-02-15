@@ -149,8 +149,8 @@ function useDemo(elevatorSystem: ElevatorSystem, floorCount: number, reset: () =
   const [demoPlaying, setDemoPlaying] = useState(initValues.demoPlaying);
 
   const toggleDemo = useCallback(() => {
+    if (demoPlaying) reset();
     setDemoPlaying(!demoPlaying);
-    if (!demoPlaying) reset();
   }, [demoPlaying, reset]);
 
   const demoStep = useCallback(() => {

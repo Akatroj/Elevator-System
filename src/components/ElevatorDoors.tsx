@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Wrapper } from '.';
 
 type ElevatorDoorsProps = {
   open: boolean;

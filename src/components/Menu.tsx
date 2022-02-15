@@ -1,9 +1,10 @@
-import React, { SyntheticEvent, useState } from 'react';
+import React, { SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { useDebugMode, useElevatorSystem } from '../hooks';
+import { useElevatorSystem } from '../hooks';
 import { Floor } from '../models';
-import { DeleteButton, FloorButtons } from '.';
+import { DeleteButton, FloorButtons, Wrapper } from '.';
+import { MenuForm } from './MenuForm';
 import classNames from 'classnames';
 
 type MenuProps = {
@@ -11,7 +12,9 @@ type MenuProps = {
   hide: () => void;
 };
 
-const OuterContainer = styled.div`
+const MenuWrapper = styled(Wrapper)`
+  flex-flow: column;
+  justify-content: space-evenly;
   position: fixed;
   top: 0;
   right: 0;
@@ -19,7 +22,7 @@ const OuterContainer = styled.div`
 
   width: min(450px, 100vw);
   height: 100vh;
-  background-color: yellow;
+  background-color: #96c0b7;
 
   transition: transform 0.5s ease-in-out;
   &.hidden {
@@ -27,9 +30,9 @@ const OuterContainer = styled.div`
   }
 `;
 
-const Button = styled.button``;
-
-const FloorCountForm = styled.form``;
+const BigFloorButtons = styled(FloorButtons)`
+  font-size: 3em;
+`;
 
 const HideButton = styled(DeleteButton)`
   font-size: 3rem;
@@ -37,39 +40,21 @@ const HideButton = styled(DeleteButton)`
 
 export const Menu = ({ visible, hide }: MenuProps) => {
   const navigate = useNavigate();
-  const { floorCount, setFloorCount, paused, togglePaused, toggleDemo, demoPlaying } =
-    useElevatorSystem();
-  const { debug, toggleDebug } = useDebugMode();
-
-  const [newFloorCount, setNewFloorCount] = useState(floorCount);
+  const { floorCount } = useElevatorSystem();
 
   const className = classNames({ hidden: !visible });
   return (
-    <OuterContainer
+    <MenuWrapper
       className={className}
       onClick={(event: SyntheticEvent) => event.stopPropagation()}
     >
       <HideButton clickHandler={hide} />
-      <FloorButtons
+      <BigFloorButtons
         clickedFloors={[]}
         floorCount={floorCount}
         clickHandler={(floor: Floor) => navigate(`/floors/${floor}`)}
-        // size={{ width: 50, height: 100 }}
-      ></FloorButtons>
-      <Button onClick={togglePaused}>{paused ? 'Start interval' : 'Pause interval'}</Button>
-      <Button onClick={toggleDebug}>{debug ? 'Stop debug mode' : 'Start debug mode'}</Button>
-      <Button onClick={toggleDemo}>{demoPlaying ? 'Stop demo' : 'Start demo'}</Button>
-      {/* TODO: Extract component */}
-      <FloorCountForm onSubmit={(event: SyntheticEvent) => event.preventDefault()}>
-        <input
-          name="floorCount"
-          min={2}
-          value={newFloorCount}
-          onChange={event => setNewFloorCount(Number(event.target.value))}
-        />
-        <label htmlFor="floorCount">Change the number of floors.</label>
-        <Button onClick={() => setFloorCount(newFloorCount)}>{'Apply'}</Button>
-      </FloorCountForm>
-    </OuterContainer>
+      ></BigFloorButtons>
+      <MenuForm />
+    </MenuWrapper>
   );
 };

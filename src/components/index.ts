@@ -1,4 +1,5 @@
 export * from './utils';
+export * from './MenuForm';
 export * from './AddNewElevator';
 export * from './DeleteButton';
 export * from './Elevator';

@@ -6,6 +6,7 @@ import { useDebugMode } from '../hooks';
 import { Floor } from '../models';
 
 type FloorButtonsProps = {
+  className?: string;
   floorCount: number;
   clickedFloors: Floor[];
   clickHandler: (floor: number) => void;
@@ -54,6 +55,7 @@ export const FloorButtons = ({
   floorCount,
   clickedFloors,
   clickHandler,
+  className,
 }: FloorButtonsProps) => {
   const { debug } = useDebugMode();
   const containerClassName = classNames({ debug });
@@ -78,5 +80,9 @@ export const FloorButtons = ({
     });
   }, [clickedFloors, floorCount, clickHandler]);
 
-  return <FloorButtonsWrapper className={containerClassName}>{buttons}</FloorButtonsWrapper>;
+  return (
+    <FloorButtonsWrapper className={`${containerClassName} ${className}`}>
+      {buttons}
+    </FloorButtonsWrapper>
+  );
 };
