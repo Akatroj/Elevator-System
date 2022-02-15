@@ -120,7 +120,7 @@ export class Elevator {
    * forcing the elevator to move to the target floor first,
    * postponing it's former target.
    */
-  addImmediateStop(targetFloor: Floor, distance?: number) {
+  addImmediateStop(targetFloor: Floor, distance?: number): void {
     this.setState(targetFloor);
     distance = distance ?? this.getDistance(targetFloor);
     const newReq: ElevatorStopRequest = { targetFloor, distance };

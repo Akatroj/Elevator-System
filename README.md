@@ -1,46 +1,61 @@
-# Getting Started with Create React App
+# Elevator System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## About
 
-## Available Scripts
+Simple application that controls the movement of elevators in a builing.
 
-In the project directory, you can run:
+<!-- You can view the deployed page at [this link]() -->
 
-### `npm start`
+Features: 
+* Send an elevator to a target floor - the elevator will organise it's stops in the most efficient manner.
+* Request a pickup from your location - the elevator closest to your floor will come to you.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+You can find more details about the algorithms used by the system in [src/models/](src/models/) directory.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The application also comes with a front-end made with React and styled-components, to visualize it's behaviour in an eye-friendly way.
 
-### `npm test`
+The application comes with a demo enabled by default - random pickup and dropoff requests will be made every second. You can admire the efficiency of the elevators, or you can disable the demo from the menu - doing so will teleport all elevators to the ground and make them abandon their previous requests.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The frontend isn't finished yet - there are some known issues.
 
-### `npm run build`
+Each floor has it's own endpoint, however persistence isn't implemented yet, so navigating to different floors through your browser's URL bar will reset the system. You can however use buttons in the menu to view other floors.
+There was supposed to be a full-screen animation of doors closing and opening on you when moving floors, however it isn't here yet.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Every second a new step of this simulation is played - all elevators move one floor closer to their targets. You can pause the interval from the menu.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+When an elevator arrives at your floor, it will show a door opening animation revealing the buttons inside - you can use them so send the elevator to different floors.
+These buttons are scrollable.
+You can use the debug mode button from the menu to force these buttons to stay on top, even when the elevator is closed.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Currently, the animation will play everytime an elevator comes to your floor - even if it isn't stopping on your floor and just passing by.
 
-### `npm run eject`
+By default there are 10 floors, you can however change this number from the menu. 
+Changing this number causes all elevators to abandon their duties and teleport back to the ground floor - this is by design, because changing the number of floors while the elevators are moving causes a lot of mental dillema - what should happend with an elevator that was previously on a now deleted floor - should it be destroyed, teleported back to ground, or forced to crawl back to existing floors one by one?
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+You can use the triangular buttons (currently hideously located at the top left corner - sorry!) to request a pickup.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+After hovering on an elevator you can remove it. You can also add up to 16 elevators using the green plus icon.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Communication between data model and the front-end is done mostly by the [ElevatorSystemContext](src/contexts/ElevatorSystem.tsx) using lots of react hooks to trick React - a framework all about immutable states, to handle mutable states 😎. I don't regret my choices.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+It's kinda bloated, coming in at around 220 LOC. I probably shouldn't be keeping so much state in this single context - from proxy methods that mutate the data model and force react to update the view, through bonus funcionality like amount of floors, to something that probably really shouldn't be there like advancing the simulation on interval and demo feature functionality.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Development:
+Install the necesarry dependencies first: 
+
+`npm install`
+
+Start the dev server:
+
+`npm start`
+
+* Open http://localhost:3000 to view it in the browser.
+
+* The page will reload if you make edits. You will also see any lint errors in the console.
+
+
+Build for production:
+
+`npm run build`

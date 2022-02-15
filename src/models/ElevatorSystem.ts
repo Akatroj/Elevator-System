@@ -36,7 +36,7 @@ export class ElevatorSystem {
     if (!this.tryDispatchElevator(pickupRequest)) this.pickupRequests.push(pickupRequest);
   }
 
-  dropoff(elevatorID: number, targetFloor: Floor) {
+  dropoff(elevatorID: number, targetFloor: Floor): void {
     this.elevators.find(elevator => elevator.id === elevatorID)?.addStop(targetFloor);
   }
 
