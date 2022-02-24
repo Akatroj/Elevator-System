@@ -2,7 +2,7 @@
 
 ## About
 
-Simple application that controls the movement of elevators in a builing.
+Simple application that controls the movement of elevators in a building.
 
 You can view the deployed page at [this link](https://akatroj.github.io/Elevator-System/)
 
