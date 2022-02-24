@@ -42,8 +42,16 @@ const FormGroup = styled(Wrapper)`
 `;
 
 export const MenuForm = (props: Props) => {
-  const { floorCount, setFloorCount, paused, togglePaused, toggleDemo, demoPlaying } =
-    useElevatorSystem();
+  const {
+    floorCount,
+    setFloorCount,
+    paused,
+    togglePaused,
+    toggleDemo,
+    demoPlaying,
+    delay,
+    setDelay,
+  } = useElevatorSystem();
   const { debug, toggleDebug } = useDebugMode();
   const [newFloorCount, setNewFloorCount] = useState(floorCount);
 
@@ -56,6 +64,13 @@ export const MenuForm = (props: Props) => {
           min={2}
           value={newFloorCount}
           onChange={event => setNewFloorCount(Number(event.target.value))}
+        />
+
+        <label htmlFor="delay">Change the delay between next steps.</label>
+        <input
+          name="delay"
+          value={delay}
+          onChange={event => setDelay(Number(event.target.value))}
         />
         <Button onClick={() => setFloorCount(newFloorCount)}>{'Apply'}</Button>
       </FormGroup>

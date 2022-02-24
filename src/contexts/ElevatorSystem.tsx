@@ -11,6 +11,7 @@ export interface IElevatorSystemContext {
   elevators: ElevatorStatus[];
   paused: boolean;
   demoPlaying: boolean;
+  delay: number;
   setFloorCount: (floorCount: number) => void;
   togglePaused: () => void;
   toggleDemo: () => void;
@@ -20,14 +21,15 @@ export interface IElevatorSystemContext {
   addElevator: () => void;
   removeElevator: (id: number) => void;
   reset: () => void;
+  setDelay: (newvall: number) => void;
 }
 
 const initValues = {
   floorCount: 10,
-  startingElevators: 4,
+  startingElevators: 1,
   paused: false,
-  delay: 1000,
-  demoPlaying: true,
+  delay: 3000,
+  demoPlaying: false,
 };
 
 export const ElevatorSystemContext = React.createContext<IElevatorSystemContext | null>(null);
@@ -47,7 +49,12 @@ export const ElevatorSystemProvider = ({ children }: ElevatorSystemProviderProps
 
   const { floorCount, setFloorCount } = useFloorCount(elevatorSystem, update);
   const { demoPlaying, toggleDemo, demoStep } = useDemo(elevatorSystem, floorCount, reset);
-  const { paused, togglePaused } = useInterval(elevatorSystem, floorCount, step, demoStep);
+  const { paused, togglePaused, delay, setDelay } = useInterval(
+    elevatorSystem,
+    floorCount,
+    step,
+    demoStep
+  );
 
   const data: IElevatorSystemContext = {
     elevators,
@@ -63,6 +70,8 @@ export const ElevatorSystemProvider = ({ children }: ElevatorSystemProviderProps
     addElevator,
     removeElevator,
     reset,
+    setDelay,
+    delay,
   };
 
   return (
@@ -177,13 +186,14 @@ function useInterval(
   step: () => void,
   demoStep: (elevatorSystem: ElevatorSystem, floorCount: number) => void
 ) {
-  const [delay /*setDelay*/] = useState(initValues.delay);
+  const [delay, setDelay] = useState(initValues.delay);
   const [paused, setPaused] = useState(initValues.paused);
   const intervalID = useRef(-1);
 
   const nextStep = useCallback(() => {
     step();
     demoStep(elevatorSystem, floorCount);
+    console.log(new Date());
   }, [step, demoStep, elevatorSystem, floorCount]);
 
   useEffect(() => {
@@ -198,7 +208,10 @@ function useInterval(
     setPaused(!paused);
   }, [nextStep, paused, intervalID, delay]);
 
-  return useMemo(() => ({ togglePaused, paused }), [paused, togglePaused]);
+  return useMemo(
+    () => ({ togglePaused, paused, delay, setDelay }),
+    [paused, togglePaused, delay]
+  );
 }
 
 function useFloorCount(elevatorSystem: ElevatorSystem, update: () => void) {

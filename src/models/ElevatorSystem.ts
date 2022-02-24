@@ -77,7 +77,11 @@ export class ElevatorSystem {
     const targetFloor: Floor = pickupRequest.sourceFloor;
     const dispatchCandidates: DispatchCandidate[] = [];
     this.elevators.forEach(elevator => {
-      if (elevator.isIdle || inRange(targetFloor, elevator.currentFloor, elevator.nextStop)) {
+      if (
+        elevator.isIdle ||
+        (inRange(targetFloor, elevator.currentFloor, elevator.nextStop) &&
+          elevator.status.state === pickupRequest.direction)
+      ) {
         const distance = elevator.getDistance(targetFloor);
         dispatchCandidates.push({ elevator, distance });
       }
@@ -93,7 +97,7 @@ export class ElevatorSystem {
       return false;
     }
 
-    dispatchCandidates.sort((a, b) => a.distance - b.distance);
+    dispatchCandidates.sort((a, b) => a.distance - b.distance); // min instead of sort
     const chosenCandidate = dispatchCandidates[0];
     chosenCandidate?.elevator.addImmediateStop(targetFloor, chosenCandidate.distance);
     return true;

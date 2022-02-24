@@ -28,8 +28,9 @@ const ElevatorButtonsWrapper = styled.div`
 
 export const ElevatorButtons = () => {
   const [active, setActive] = useState<ButtonActiveState>({ up: false, down: false });
-  const { elevators, requestPickup } = useElevatorSystem();
+  const { elevators, requestPickup, floorCount } = useElevatorSystem();
   const currentFloor = useCurrentFloor();
+  const [requestFloor, setRequestFloor] = useState(currentFloor);
 
   const activate = (key: ElevatorDirection) => {
     active[key] = true;
@@ -44,7 +45,7 @@ export const ElevatorButtons = () => {
   }, [elevators, currentFloor]);
 
   const clickHandler = (key: ElevatorDirection) => {
-    requestPickup(currentFloor, key);
+    requestPickup(requestFloor, key);
     activate(key);
   };
 
@@ -65,6 +66,14 @@ export const ElevatorButtons = () => {
         className={downClass}
         onClick={() => clickHandler('down')}
         fixedWidth
+      />
+      <label htmlFor="requestFloor">Select floor for pickup.</label>
+      <input
+        name="requestFloor"
+        min={0}
+        max={floorCount}
+        value={requestFloor}
+        onChange={event => setRequestFloor(Number(event.target.value))}
       />
     </ElevatorButtonsWrapper>
   );

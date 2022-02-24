@@ -2,7 +2,6 @@ import { Floor, ElevatorWorkingState, ElevatorStatus } from './utils';
 
 interface ElevatorStopRequest {
   targetFloor: Floor;
-  distance: number;
 }
 
 export class Elevator {
@@ -97,7 +96,7 @@ export class Elevator {
   addStop(targetFloor: Floor): void {
     const distance = this.getDistance(targetFloor);
     if (distance === 0) return;
-    const newReq: ElevatorStopRequest = { targetFloor, distance };
+    const newReq: ElevatorStopRequest = { targetFloor };
     const arrayToInsert =
       distance > 0 ? this.currentDirectionStops : this.oppositeDirectionStops;
 
@@ -105,9 +104,10 @@ export class Elevator {
 
     let i = 0;
     for (const request of arrayToInsert) {
+      const requestDistance = this.getDistance(request.targetFloor);
       if (
-        (distance > 0 && request.distance <= distance) ||
-        (distance < 0 && request.distance >= distance)
+        (distance > 0 && requestDistance <= distance) ||
+        (distance < 0 && requestDistance >= distance)
       )
         i++;
     }
@@ -123,7 +123,7 @@ export class Elevator {
   addImmediateStop(targetFloor: Floor, distance?: number): void {
     this.setState(targetFloor);
     distance = distance ?? this.getDistance(targetFloor);
-    const newReq: ElevatorStopRequest = { targetFloor, distance };
+    const newReq: ElevatorStopRequest = { targetFloor };
     if (
       distance === 0 ||
       this.currentDirectionStops.find(stop => stop.targetFloor === targetFloor) !== undefined
@@ -146,9 +146,6 @@ export class Elevator {
       default:
         return;
     }
-
-    this.currentDirectionStops.forEach(request => request.distance--);
-    this.oppositeDirectionStops.forEach(request => request.distance--);
   }
 
   /**
@@ -160,14 +157,12 @@ export class Elevator {
     this.currentDirectionStops.splice(0, this.currentDirectionStops.length);
 
     this.oppositeDirectionStops.forEach(req => {
-      req.distance *= -1;
       this.currentDirectionStops.push(req);
     });
 
     this.oppositeDirectionStops.splice(0, this.oppositeDirectionStops.length);
 
     reqCopy.forEach(req => {
-      req.distance *= -1;
       this.oppositeDirectionStops.push(req);
     });
 

@@ -10,7 +10,7 @@ export interface IDebugModeContext {
 }
 
 const initValues = {
-  debug: false,
+  debug: true,
 };
 
 export const DebugModeContext = React.createContext<IDebugModeContext | null>(null);
